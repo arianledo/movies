@@ -27,7 +27,7 @@ public class MovieController {
     @GetMapping("/{id}")
     public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
         Optional<Movie> movie =  movieRepository.findById(id);
-        return movie.isPresent() ? ResponseEntity.ok(movie.get()) : ResponseEntity.notFound().build();
+        return movie.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @CrossOrigin
@@ -65,7 +65,7 @@ public class MovieController {
         if (!movieRepository.existsById(id))
             return ResponseEntity.notFound().build();
 
-        Optional<Movie> optional = movieRepository.findById(id);
+        Optional<Movie> optional =movieRepository.findById(id);
         Movie movie = optional.get();
 
         //calculate rating and add a new vote
